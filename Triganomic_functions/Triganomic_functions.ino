@@ -1,23 +1,31 @@
 #include <FixedPoints.h>
 #include <FixedPointsCommon.h>
 #include <Arduboy2.h>
-Arduboy2 ard;
 
 #include "Trig.h"
 
-uint8_t dex = 0;
+Arduboy2 arduboy;
 
-void setup() {
-  ard.begin();
+
+void setup()
+{
+	arduboy.begin();
 }
 
-void loop() {
-  ard.clear();
-  
-  for(uint8_t i=0; i<128; ++i)
-    {
-    ard.drawPixel(i,round(static_cast<float>(Sin(i+dex))*10)+31);
+uint8_t j = 0;
+void loop()
+{
+	if(!arduboy.nextFrame())
+		return;
+	
+	arduboy.clear();
+
+	uint8_t halfHeightIndex = ((HEIGHT - 1) / 2);
+	for(uint8_t i=0; i<128; ++i)
+	{
+    	arduboy.drawPixel(i, round(static_cast<float>(Sin((i * 2) + j)) * halfHeightIndex) + halfHeightIndex);
     }
-  dex++;
-  ard.display();
+	++j;
+	
+	arduboy.display();
 }

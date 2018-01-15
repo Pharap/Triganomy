@@ -6,8 +6,7 @@ const AngleResult PROGMEM AngleTable[64] = {0.0, 0.0245, 0.0491, 0.0736, 0.098, 
 
 AngleResult AngleLookup(uint_fast8_t index)
 {
-    AngleResult k = 0;
-    memcpy_P(&k,&AngleTable[(index & (0x3F))],2);
+    AngleResult k = AngleResult::fromInternal(pgm_read_word(&AngleTable[(index & (0x3F))]));
     return (index == 64) ? 1 : k;
 }
 
