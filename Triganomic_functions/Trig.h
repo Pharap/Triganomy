@@ -6,39 +6,37 @@ const AngleResult PROGMEM AngleTable[64] = {0.0, 0.0245, 0.0491, 0.0736, 0.098, 
 
 AngleResult AngleLookup(uint_fast8_t index)
 {
-    AngleResult k = AngleResult::fromInternal(pgm_read_word(&AngleTable[(index & (0x3F))]));
-    return (index == 64) ? 1 : k;
+	if(index == 64)
+		return 1;
+
+	const uint_fast16_t value = pgm_read_word(&AngleTable[(index & (0x3F))]);
+	return AngleResult::fromInternal(value);
 }
 
 AngleResult Sin(uint8_t brads)
 {
-  const uint8_t quarter = ((brads & 0xC0) >> 6);
-  const uint8_t index = ((brads & 0x3F) >> 0);
-  switch (quarter)
-  {
-  case 0: return AngleLookup(index);
-  case 1: return AngleLookup(64 - index);
-  case 2: return -AngleLookup(index);
-  case 3: return -AngleLookup(64 - index);
-  default: return 0;
-  }
+	const uint8_t quarter = ((brads & 0xC0) >> 6);
+	const uint8_t index = ((brads & 0x3F) >> 0);
+	switch(quarter)
+	{
+		case 0: return AngleLookup(index);
+		case 1: return AngleLookup(64 - index);
+		case 2: return -AngleLookup(index);
+		case 3: return -AngleLookup(64 - index);
+		default: return 0;
+	}
 }
 
 AngleResult Cos(uint8_t brads)
 {
-  const uint8_t quarter = ((brads & 0xC0) >> 6);
-  const uint8_t index = ((brads & 0x3F) >> 0);
-  switch (quarter)
-  {
-  case 0: return AngleLookup(64 - index);
-  case 1: return -AngleLookup(index);
-  case 2: return -AngleLookup(64 - index);
-  case 3: return AngleLookup(index);
-  default: return 0;
-  }
+	const uint8_t quarter = ((brads & 0xC0) >> 6);
+	const uint8_t index = ((brads & 0x3F) >> 0);
+	switch(quarter)
+	{
+		case 0: return AngleLookup(64 - index);
+		case 1: return -AngleLookup(index);
+		case 2: return -AngleLookup(64 - index);
+		case 3: return AngleLookup(index);
+		default: return 0;
+	}
 }
-
-
-
-
-
